@@ -1,0 +1,99 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/samsunginternet/OneUI-Web/oui-css/oui.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+            overflow-x: scroll;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: 100vw;
+            grid-template-rows: 100%;
+            height: 100%;
+        }
+
+        body > * {
+            scroll-snap-align: start;
+        }
+
+        button:disabled {
+            pointer-events: none;
+            filter: grayscale(100) opacity(0.5);
+        }
+
+        .container {
+            height: 100%;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .oui-viewing {
+            flex-grow: 1;
+            min-height: 40%;
+        }
+
+        .oui-interaction {
+            min-height: max-content;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        video {
+            margin: 4em 0;
+        }
+    </style>
+</head>
+
+<body>
+    {% for page in site.pages %}
+    {% assign path = page.path | split: '/'  %}
+    {% if path[0] == "pages" %}
+    {% assign next_i = forloop.index | plus: 0 %}
+    {% assign prev_i = forloop.index | minus: 2 %}
+    {% assign prev_title = site.pages[prev_i].title %}
+    {% assign next_title = site.pages[next_i].title %}
+    <article id="{{ page.title | downcase | handleize }}">
+        <div class="container">
+        <div class="oui-viewing">
+            <h2>{{ forloop.index }}. {{ page.title }}</h2>
+            {{ page.content | markdownify }}
+        </div>
+        <div class="oui-interaction">
+            {% if prev_title %}<a href="#{{ prev_title | downcase | handleize }}">
+                <button class="prev_btn oui-button">
+                    Previous Page: {{ prev_title }}
+                </button></a>
+            {% else %}
+                <button class="oui-button" disabled>No Previous Page</button>
+            {% endif %}
+            {% if next_title %}<a href="#{{ next_title | downcase | handleize }}">
+                <button class="next_btn oui-button" style="align-self: end;">
+                    Next Page: {{ next_title }}
+                </button></a>
+            {% else %}
+                <button class="oui-button" disabled>No Next Page</button>
+            {% endif %}
+        </div>
+        </div>
+    </article>
+    {% endif %}{% endfor %}
+</body>
+
+</html>
